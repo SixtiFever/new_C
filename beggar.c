@@ -111,9 +111,19 @@ Player *create_players(int num_players) {
 void complete_round(Player *players, int player_count, Deck *pile, int *pile_counter) {
     for ( int i = 0; i < player_count; i++ ) {
         pile->cards[*pile_counter].value = players[i].hand[0];
+        // int pile_top = players[i].hand[0];
+
         players[i].hand[0] = 0;
         remove_zeros(&players[i].hand[0]);
+        
+        /* if a penalty card do something */
+        if( pile->cards[i].value > 10 ) {
+            printf("Penalty! Value %d at index %d\n", pile->cards[i].value, *pile_counter);
+        }
+        
         (*pile_counter)++;
+        
+        
     }
 }
 
@@ -135,17 +145,34 @@ int main() {
         }
     }
 
-    int *pile_counter = 0;
+    int pile_counter = 0;
+    printf("Initial pile\n");
     print_pile(pile);
+    printf("Initial hands\n");
     print_hands(num_players, hand_size, players);
-    complete_round(players, num_players, &pile, pile_counter);
-    printf("Pile counter: %d\n", pile_counter);
-    complete_round(players, num_players, &pile, pile_counter);
-    printf("Pile counter: %d\n", pile_counter);
-    complete_round(players, num_players, &pile, pile_counter);
-    printf("Pile counter: %d\n", pile_counter);
+    printf("\n\n");
+    // round 1
+    printf("Round 1\n");
+    complete_round(players, num_players, &pile, &pile_counter);
+    print_hands(num_players, hand_size, players);
     print_pile(pile);
+    printf("\n\n");
+    
+    // round 2
+    printf("Round 2\n");
+    complete_round(players, num_players, &pile, &pile_counter);
     print_hands(num_players, hand_size, players);
+    print_pile(pile);
+    printf("\n\n");
+    
+    // round 3
+    printf("Round 3\n");
+    complete_round(players, num_players, &pile, &pile_counter);
+    print_hands(num_players, hand_size, players);
+    print_pile(pile);
+    printf("\n\n");
+
+    
     // Free memory allocated for players' hands and player array.
     for (int i = 0; i < num_players; i++) {
         free(players[i].hand);
@@ -154,3 +181,5 @@ int main() {
 
     return 0;
 }
+  
+  
