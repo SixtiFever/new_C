@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define NUM_RANKS 13
 #define NUM_SUITS 4
@@ -107,18 +108,57 @@ Player *create_players(int num_players) {
     return players;
 }
 
+// int penalty(Player *player1, Player *player2, Deck **pile, int top_index, bool *completed) {
+//     printf("%d %d\n",player1->player_number,player2->player_number);
+//     printf("%p %d\n", **pile, pile->cards[top_index].value);
+//     // printf("Player %d place a %d. Now player %d must place down %d cards\n", player1->player_number, pile->cards[top_index].value, player2->player_number, (pile->cards[top_index].value) % 10);
+    
+//     return 1;
+// }
+
 // completes one round of the game
 void complete_round(Player *players, int player_count, Deck *pile, int *pile_counter) {
     for ( int i = 0; i < player_count; i++ ) {
+        
         pile->cards[*pile_counter].value = players[i].hand[0];
-        // int pile_top = players[i].hand[0];
-
+        printf("Adding %d to the pile from player %d\n", pile->cards[*pile_counter].value,players[i].player_number );
         players[i].hand[0] = 0;
         remove_zeros(&players[i].hand[0]);
         
         /* if a penalty card do something */
         if( pile->cards[i].value > 10 ) {
-            printf("Penalty! Value %d at index %d\n", pile->cards[i].value, *pile_counter);
+            
+            bool paid = true;
+
+            while(!paid) {
+                int penalty_card_val = pile->cards[i].value;
+                int penalty_count = penalty_card_val % 10;
+                Player penalised_player = players[i+1];
+
+                for( int j = 0; j < penalty_card_val % 10; j++ ) {
+                    (*pile_counter)++;
+                    pile->cards[*pile_counter].value = players[i+1].hand[j];
+                    printf("Adding %d to the pile from player %d\n", pile->cards[*pile_counter].value, players[i+1].player_number );
+                    players[i+1].hand[j]= 0;
+
+                    // if another penalty card is placed
+                    if( players[i+1].hand[j] > 10) {
+                        players[i+1].hand[j] = 0;
+                        remove_zeros(&players[i+1].hand[0]);
+                        i++;
+                        break;
+                    }
+                    
+                    
+                    
+
+                    if( j == penalty_count -1 ) {
+                        remove_zeros(&players[i+1].hand[0]);
+                        break;
+                    }
+                }
+                paid = true;
+            }
         }
         
         (*pile_counter)++;
@@ -126,6 +166,8 @@ void complete_round(Player *players, int player_count, Deck *pile, int *pile_cou
         
     }
 }
+
+
 
 int main() {
     // create decks
@@ -145,34 +187,22 @@ int main() {
         }
     }
 
-    int pile_counter = 0;
+    int *pile_counter = 0;
     printf("Initial pile\n");
     print_pile(pile);
     printf("Initial hands\n");
     print_hands(num_players, hand_size, players);
     printf("\n\n");
-    // round 1
-    printf("Round 1\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
     
-    // round 2
-    printf("Round 2\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
     
-    // round 3
-    printf("Round 3\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
+    for( int j = 0; j < 20; j++ ) {
+        printf("Round %d\n",j);
+        complete_round(players, num_players, &pile, &pile_counter);
+        print_hands(num_players, hand_size, players);
+        print_pile(pile);
+        printf("\n\n");
+    }
 
-    
     // Free memory allocated for players' hands and player array.
     for (int i = 0; i < num_players; i++) {
         free(players[i].hand);
@@ -181,5 +211,3 @@ int main() {
 
     return 0;
 }
-  
-  
