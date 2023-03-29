@@ -119,9 +119,8 @@ Player *create_players(int num_players) {
 // completes one round of the game
 void complete_round(Player *players, int player_count, Deck *pile, int *pile_counter) {
     for ( int i = 0; i < player_count; i++ ) {
-        
         pile->cards[*pile_counter].value = players[i].hand[0];
-        printf("Adding %d to the pile from player %d\n", pile->cards[*pile_counter].value,players[i].player_number );
+        printf("Adding %d to the pile from player %d\n", pile->cards[*pile_counter].value, players[i].player_number );
         players[i].hand[0] = 0;
         remove_zeros(&players[i].hand[0]);
         
@@ -197,83 +196,13 @@ int main() {
     print_hands(num_players, hand_size, players);
     printf("\n\n");
     
-    // round 1
-    printf("Round 1\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 2
-    printf("Round 2\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 3
-    printf("Round 3\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 4
-    printf("Round 4\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 5
-    printf("Round 5\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 4
-    printf("Round 6\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 4
-    printf("Round 7\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 4
-    printf("Round 8\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 4
-    printf("Round 9\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // round 4
-    printf("Round 10\n");
-    complete_round(players, num_players, &pile, &pile_counter);
-    print_hands(num_players, hand_size, players);
-    print_pile(pile);
-    printf("\n\n");
-    
-    // for( int j = 0; j < 20; j++ ) {
-    //     printf("Round %d\n",j);
-    //     complete_round(players, num_players, &pile, &pile_counter);
-    //     print_hands(num_players, hand_size, players);
-    //     print_pile(pile);
-    //     printf("\n\n");
-    // }
+    for( int j = 0; j < 20; j++ ) {
+        printf("Round %d\n",j);
+        complete_round(players, num_players, &pile, &pile_counter);
+        print_hands(num_players, hand_size, players);
+        print_pile(pile);
+        printf("\n\n");
+    }
 
     
     // Free memory allocated for players' hands and player array.
