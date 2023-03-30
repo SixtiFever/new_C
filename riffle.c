@@ -5,32 +5,41 @@
 
 float quality(int[],int);
 
+// performs one riffle on the given array. Arguments:
+// pointer to an array; array length, byte size of each 
+// element.
 void riffle_once(void* arr, int len, int size) {
-    char* temp = malloc(size);
-    int i, j;
-    srand(time(NULL));
+    	// cast to char array
+	char* temp;
+	if( !( temp = malloc(size) ) ) {
+		printf("Error assinging memory to temp array.\n");
+	}
+	int i, j;
+	srand(time(NULL));
 
     for (i = len / 2, j = 0; i < len - 1; i++, j++) {
-        // Choose a random cut point between i and len-1
-        int cut;
-        do {
-            cut = rand() % len - 1;
-        } while ( cut == -1 );
+	// Choose a random cut point between i and len-1
+	int cut;
+	do {
+	    cut = rand() % len - 1;
+	} while ( cut == -1 );
 
-        // Swap the elements between i and cut and between cut+1 and j
-        memcpy(temp, (char*)arr + i * size, size);
-        memcpy((char*)arr + i * size, (char*)arr + cut * size, size);
-        memcpy((char*)arr + cut * size, temp, size);
+	// Swap elements
+	memcpy(temp, (char*)arr + i * size, size);
+	memcpy((char*)arr + i * size, (char*)arr + cut * size, size);
+	memcpy((char*)arr + cut * size, temp, size);
 
-        memcpy(temp, (char*)arr + (cut + 1) * size, size);
-        memcpy((char*)arr + (cut + 1) * size, (char*)arr + (len - j - 1) * size, size);
-        memcpy((char*)arr + (len - j - 1) * size, temp, size);
-        
+	memcpy(temp, (char*)arr + (cut + 1) * size, size);
+	memcpy((char*)arr + (cut + 1) * size, (char*)arr + (len - j - 1) * size, size);
+	memcpy((char*)arr + (len - j - 1) * size, temp, size);
+
     }
 
     free(temp);
 }
 
+// performs riffle_once N times. Takes in an array, 
+// length, byte size of elements, and N for shuffle count.
 void riffle(void *L, int len, int size, int N) {
 int i;
   for( i = 0; i < N; i++ ) {
@@ -38,6 +47,11 @@ int i;
   }
 }
 
+// determines the quality of an array by 
+// getting the average number of times the
+// element on the right is greate than the 
+// element on the left. Takes an array of 
+// numbers and array length as arguments.
 float quality(int numbers[], int len) {
 	int sum = 0;
 	for ( int i = 0; i < len; i++ ) {
@@ -49,6 +63,10 @@ float quality(int numbers[], int len) {
 	return quality;
 }
 
+// Uses quality to determine the average quality of X trials.
+// Takes in N to create an array of N elements, shuffles 
+// is the number of time each riffle will shuffle the array,
+// trials is the number of times riffle will run through.
 void average_quality(int N, int shuffles, int trials) {
 	// create arr of N numbers
 	int arr[N];
@@ -72,7 +90,5 @@ void average_quality(int N, int shuffles, int trials) {
 		fputs(buffer, fp);
 		fputs("\n", fp);
 		fclose(fp);
-
-	//printf("\nAfter %d trials with %d shuffles each, the avg quality was %.2f\n", trials, shuffles, quality(arr,len));
 }
 
