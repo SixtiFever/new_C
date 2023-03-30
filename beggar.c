@@ -25,27 +25,36 @@ typedef struct Deck {
 
 void shuffle_deck(Deck*);
 
-// prints players hands
+// prints players hands. Arguments are number of player, hand_sizes
+// and the players. 
 void print_hands(int num_players, int hand_size, Player *players) {
     // Print out the cards in each player's hand.
-    for (int i = 0; i < num_players; i++) {
+    int i, j;
+    for (i = 0; i < num_players; i++) {
         printf("Player %d hand: ", players[i].player_number);
-        for (int j = 0; j < hand_size; j++) {
+        for (j = 0; j < hand_size; j++) {
             printf("%d ", players[i].hand[j]);
         }
         printf("\n");
     }
 }
 
-// prints players hands
+// prints the current pile that players
+// are placing cards onto. Takes in the pile
+// as an argument. Returns void.
 void print_pile(Deck pile) {
     // Print out the cards in each player's hand.
-    for (int i = 0; i < DECK_SIZE; i++) {
+    int i;
+    for (i = 0; i < DECK_SIZE; i++) {
         printf("%d ", pile.cards[i].value);
     }
     printf("\n");
 }
-// remove zeros from hand
+
+// Removes zeros from player hand after they have
+// placed a card. Then moves all non-zero cards
+// in their hand forward. Takes hand as an 
+// argument.
 void remove_zeros(int *hand) {
     int i, j;
     for (i = 0, j = 0; i < DECK_SIZE; i++) {
@@ -60,20 +69,25 @@ void remove_zeros(int *hand) {
     }
 }
 
-// create pile with all 0 values
+// Creates the initial pile of 52 cards
+// all of which are assigned 0 value.
+// Returns a Deck struct.
 Deck create_pile() {
     Deck pile;
-    for( int i = 0; i < DECK_SIZE; i++ ) {
+    int i;
+    for( i = 0; i < DECK_SIZE; i++ ) {
         pile.cards[i].value = 0;
     }
     return pile;
 }
 
 // Creates a new deck of cards, in ascending order.
+// Deck is then shuffled. Returns an instance of Deck struct.
 Deck create_deck() {
     Deck deck;
     int index = 0;
-    for (int value = 2; value <= 14; value++) {
+    int value;
+    for ( value = 2; value <= 14; value++ ) {
         for (int suit = 0; suit < NUM_SUITS; suit++) {
             deck.cards[index].value = value;
             index++;
@@ -83,10 +97,12 @@ Deck create_deck() {
     return deck;
 }
 
-// Shuffles the given deck of cards
+// Shuffles the deck of cards. Takes in a pointer to a
+// deck as an argument, and shuffles the deck. Returns
+// void.
 void shuffle_deck(Deck *deck) {
-    //srand(time(NULL));
-    for (int i = DECK_SIZE - 1; i > 0; i--) {
+    int i;
+    for ( i = DECK_SIZE - 1; i > 0; i-- ) {
         int j = rand() % (i + 1);
         Card temp = deck->cards[i];
         deck->cards[i] = deck->cards[j];
@@ -94,31 +110,35 @@ void shuffle_deck(Deck *deck) {
     }
 }
 
-// Creates an array of N players and allocates 52/N cards in each player's hand array.
+// Creates the initial players in the game. Takes 
+// in the number of players, and allocates memoryfrom the heap
+// for all players.
 Player *create_players(int num_players) {
-    Player *players = malloc(num_players * sizeof(Player));
+    Player *players;
+    if( !( players = malloc(num_players * sizeof(Player) ) ) ) {
+        printf("Error assigning memory for players\n");
+    }
+    //malloc(num_players * sizeof(Player));
     int hand_size = DECK_SIZE;
-    for (int i = 0; i < num_players; i++) {
+    int i, j;
+    for ( i = 0; i < num_players; i++ ) {
         players[i].player_number = i + 1;
-        players[i].hand = malloc(hand_size * sizeof(int));
-        for (int j = 0; j < hand_size; j++) {
+        if( !( players[i].hand = malloc(hand_size * sizeof(int) ) ) ) {
+            printf("Error assigning mempory for hand in create_players()\n");
+        }
+        //players[i].hand = malloc(hand_size * sizeof(int));
+        for ( j = 0; j < hand_size; j++ ) {
             players[i].hand[j] = 0;  // initialize hand to 0
         }
     }
     return players;
 }
 
-// int penalty(Player *player1, Player *player2, Deck **pile, int top_index, bool *completed) {
-//     printf("%d %d\n",player1->player_number,player2->player_number);
-//     printf("%p %d\n", **pile, pile->cards[top_index].value);
-//     // printf("Player %d place a %d. Now player %d must place down %d cards\n", player1->player_number, pile->cards[top_index].value, player2->player_number, (pile->cards[top_index].value) % 10);
-    
-//     return 1;
-// }
-
-// completes one round of the game
+// completes one round of the game. Takes in pointer to players, the number of players
+// a pointer to the pile and a pointer to a variable that is tracking the top of the pile.
 void complete_round(Player *players, int player_count, Deck *pile, int *pile_counter) {
-    for ( int i = 0; i < player_count; i++ ) {
+    int i;
+    for ( i = 0; i < player_count; i++ ) {
         pile->cards[*pile_counter].value = players[i].hand[0];
         printf("Adding %d to the pile from player %d\n", pile->cards[*pile_counter].value, players[i].player_number );
         players[i].hand[0] = 0;
@@ -126,7 +146,7 @@ void complete_round(Player *players, int player_count, Deck *pile, int *pile_cou
         
         /* if a penalty card do something */
         if( pile->cards[i].value > 10 ) {
-            
+            int j;
             bool completed = false;
 
             while(!completed) {
@@ -134,7 +154,7 @@ void complete_round(Player *players, int player_count, Deck *pile, int *pile_cou
                 int penalty_count = penalty_card_val % 10;
                 Player penalised_player = players[i+1];
 
-                for( int j = 0; j < penalty_card_val % 10; j++ ) {
+                for( j = 0; j < penalty_card_val % 10; j++ ) {
                     (*pile_counter)++;
                     pile->cards[*pile_counter].value = players[i+1].hand[j];
                     printf("Adding %d to the pile from player %d\n", pile->cards[*pile_counter].value, players[i+1].player_number );
@@ -182,8 +202,9 @@ int main() {
     // deal hands to players
     int hand_size = DECK_SIZE / num_players;
     int card_index = 0;
-    for (int i = 0; i < num_players; i++) {
-        for (int j = 0; j < hand_size; j++) {
+    int i, j;
+    for ( i = 0; i < num_players; i++ ) {
+        for ( j = 0; j < hand_size; j++ ) {
             players[i].hand[j] = deck.cards[card_index].value;
             card_index++;
         }
@@ -196,17 +217,18 @@ int main() {
     print_hands(num_players, hand_size, players);
     printf("\n\n");
     
-    for( int j = 0; j < 20; j++ ) {
-        printf("Round %d\n",j);
+    int k;
+    for( k = 0; k < 20; k++ ) {
+        printf("Round %d\n",k);
         complete_round(players, num_players, &pile, &pile_counter);
         print_hands(num_players, hand_size, players);
         print_pile(pile);
         printf("\n\n");
     }
 
-    
+    int f;
     // Free memory allocated for players' hands and player array.
-    for (int i = 0; i < num_players; i++) {
+    for ( f = 0; f < num_players; f++) {
         free(players[i].hand);
     }
     free(players);
