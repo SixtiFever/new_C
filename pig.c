@@ -15,31 +15,11 @@ char *beginsWithVowel(char[]);
 char *beginsWithConsonant(char*);
 char *pig(char*);
 
-/*
-int main() {
-	printf("Running tests:\n");
-	run_test();
-	printf("\n");
-
-	while(1) {
-		char sentence[1000];
-		printf("\nEnter a sentence: ");
-		fgets(sentence, MAX_SENTENCE_LENGTH, stdin);
-
-		char* word = strtok(sentence, " ");
-		while( word != NULL ) {
-			char *cipher = pig(word);
-			printf("%s ", cipher);
-			word = strtok(NULL, " ");
-		}
-	}
-	return 0;
-}
-*/
-
 /*********** FUNCTION DEFINITIONS ***********/
 
-/* pig function */
+// takes in a word as an argument and translates it
+// based on the specifications rules of pig latin.
+// returns a pointer to a character.
 char *pig(char *word){
     char *ptr = word;
     /* if first letter is y */
@@ -56,7 +36,8 @@ char *pig(char *word){
 }
 
 /* BEGINS WITH A VOWEL */
-/* add 'way' to the end */
+// Takes in a word adds 'way' to the end.
+// returns a pointer to a char.
 char* beginsWithVowel(char *word){
     char *memPtr, *result; // hold memory for arry
     // assign memory + 3 char slots to append 'way'
@@ -77,7 +58,9 @@ char* beginsWithVowel(char *word){
 }
 
 /* BEGINS WITH A CONSONANT */
-/* pass in memory address of argument */
+// Takes in a word that beings with 
+// a consonant. Performs translation.
+// returns a pointer to a char.
 char* beginsWithConsonant(char *word){
     char *result, *holding, *ptr;
     ptr = word; // pointer for operating on argument
