@@ -6,6 +6,7 @@
 // The shuffled arrays are printed out.
 // The average quality of the integer array is printed out.
 void demo_shuffle() {
+	printf("** From demo_shuffle() **\n");
 	int int_arr[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 	char* str_arr[] = {"alpha","beta","gamme","delta","epsilon","zeta","eta","theta","iota","kappa","lambda","mu"};
 	int i;

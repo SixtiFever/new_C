@@ -86,9 +86,9 @@ Deck create_pile() {
 Deck create_deck() {
     Deck deck;
     int index = 0;
-    int value;
+    int value, suit;
     for ( value = 2; value <= 14; value++ ) {
-        for (int suit = 0; suit < NUM_SUITS; suit++) {
+        for ( suit = 0; suit < NUM_SUITS; suit++) {
             deck.cards[index].value = value;
             index++;
         }
@@ -210,7 +210,7 @@ int main() {
         }
     }
 
-    int *pile_counter = 0;
+    int pile_counter = 0;
     printf("Initial pile\n");
     print_pile(pile);
     printf("Initial hands\n");

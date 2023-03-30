@@ -54,7 +54,8 @@ int i;
 // numbers and array length as arguments.
 float quality(int numbers[], int len) {
 	int sum = 0;
-	for ( int i = 0; i < len; i++ ) {
+	int i;
+	for ( i = 0; i < len; i++ ) {
 		if ( numbers[i+1] > numbers[i] ) {
 			sum++;
 		}
@@ -70,11 +71,12 @@ float quality(int numbers[], int len) {
 void average_quality(int N, int shuffles, int trials) {
 	// create arr of N numbers
 	int arr[N];
-	for( int i = 0; i < N; i++ ) {
+	int i, j;
+	for( i = 0; i < N; i++ ) {
 		arr[i] = i;
 	}
 	int len = sizeof(arr) / sizeof(arr[0]);
-	for( int j = 0; j < trials; j++ ) {
+	for( j = 0; j < trials; j++ ) {
 		riffle(arr, len, sizeof(int), shuffles);	
 	}
 		// print quality to file
