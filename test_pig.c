@@ -6,7 +6,7 @@
 #define Y 7
 #define N 10
 
-
+// runs a simple test case
 void run_test() {
 	char testCases[Y][N] = {"happy", "duck", "glove", "evil", "eight", "yowler", "crystal"};
 
